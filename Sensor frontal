@@ -1,0 +1,94 @@
+
+const int sensor1 = A1;
+const int sensor2 = A2;
+const int sensor3 = A3;
+const int sensor4 = A4;
+const int portaAtivacao = 13;
+#define standby 8
+//#define standby 8
+
+const int numSensores = 4;
+int pinoSensores[numSensores] = {A1, A2, A3, A4};
+#define portaAtivacao 13
+
+void setup() {
+ // pinMode(portaAtivacao, OUTPUT);
+ // digitalWrite(portaAtivacao, HIGH);
+/*
+  pinMode(sensor1, INPUT);
+  pinMode(sensor2, INPUT);
+  pinMode(sensor3, INPUT);
+  pinMode(sensor4, INPUT);
+  */
+
+  digitalWrite(standby, HIGH);
+    pinMode(portaAtivacao, INPUT);
+  digitalWrite(portaAtivacao, HIGH); 
+  for (int i = 0; i < numSensores; i++) {
+    pinMode(pinoSensores[i], INPUT); // Define os sensores
+  
+  
+  Serial.begin(9600); //expoe a leitura no monitor serial
+}}
+
+void loop() {
+  int resultado1 = analogRead(sensor1);
+  int resultado2 = analogRead(sensor2);
+  int resultado3 = analogRead(sensor3);
+  int resultado4 = analogRead(sensor4);
+
+ /* Serial.print("Sensor 1: ");
+  Serial.println(resultado1);
+  Serial.print("Sensor 2: ");
+  Serial.println(resultado2);
+  Serial.print("Sensor 3: ");
+  Serial.println(resultado3);
+  Serial.print("Sensor 4: ");
+  Serial.println(resultado4); */
+
+
+  int leituraSensores[numSensores];
+  for (int n = 0; n < numSensores; n++) {
+    leituraSensores[n] = analogRead(pinoSensores[n]);
+    Serial.println(leituraSensores[n]);
+  }
+
+  delay(1000); // Aguarde um segundo entre as leituras
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+const int numSensores = 8;
+int pinoSensores[numSensores]={A2,A3,A4,A5,A6,A7,A8,A9}; //ponta esquerda é o zero
+#define portaAtivacao 38 // Porta 50 precisa obrigatoriamente ficar no High
+
+void setup(){
+    pinMode(portaAtivacao, INPUT); // ou output?
+  digitalWrite(portaAtivacao, HIGH); // termina configurações do motor serial
+  for(int i = 0; i<numSensores; i++){
+    pinMode(pinoSensores[i], INPUT); //Usa um for pra fazer o define dos sensores de forma mais compacta
+}
+}
+
+void loop(){
+  int leituraSensores[numSensores];
+  for (int n = 0; n < numSensores; n++){
+    leituraSensores[n] = analogRead(pinoSensores[n]);
+    Serial.print("A leitura eh:");
+//    Serial.print(leituraSensores[n]);
+  }
+}
+
+*/
