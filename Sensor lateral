@@ -1,0 +1,36 @@
+#define sensorD A6
+//#define sensorE A7
+int contadorD = 0;
+int contadorE = 0;
+unsigned long tempoAnterior = 0;
+const unsigned long intervaloLeitura = 2000; // intervalo de 2 segundos
+
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(sensorD, INPUT);
+  //pinMode(sensorE, INPUT);
+
+}
+
+void loop() {
+  int sensordValor = analogRead(sensorD);
+  Serial.println(sensordValor);
+  //int sensoreValor = analogRead(sensorE);
+ /* 
+  if (sensordValor < 1000) {
+    if (millis() - tempoAnterior > intervaloLeitura) { // verifica se já passou o intervalo desde a última leitura
+      contadorD++;
+      Serial.println(sensordValor);
+      Serial.println(contadorD);
+      tempoAnterior = millis(); // atualiza o tempo da última leitura
+  if (contadorD >= 4) {
+    if (millis() - tempoAnterior > intervaloLeitura) { // verifica se já passou o intervalo desde a última leitura      
+   // i = 0;
+    Serial.print("Leitura interrompida");
+  }
+  }
+  }
+  }*/    
+
+}
