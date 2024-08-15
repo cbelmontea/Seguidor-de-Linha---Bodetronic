@@ -1,0 +1,152 @@
+#define sensorD A6
+#define sensorE A7
+const int PINO_ENA = 5; 
+const int PINO_ENB = 11;
+
+//declaracao dos pinos utilizados para controlar o sentido do motor
+const int PINO_IN1 = 6; //primeiro motor
+const int PINO_IN2 = 7;
+const int PINO_IN3 = 9; //segundo motor
+const int PINO_IN4 = 10;
+
+#define standby 8
+
+const int numSensores = 4;
+int pinoSensores[numSensores]={A1,A2,A3,A4};
+#define portaAtivacao 13
+int contadorD = 0;
+int contadorE = 0;
+unsigned long tempoAnterior = 0;
+const unsigned long intervaloLeitura = 2500;
+
+void setup() {
+  //configuração dos pinos como saida
+  pinMode(PINO_ENA, OUTPUT); 
+  pinMode(PINO_ENB, OUTPUT);
+  pinMode(PINO_IN1, OUTPUT);
+  pinMode(PINO_IN2, OUTPUT);
+  pinMode(PINO_IN3, OUTPUT);
+  pinMode(PINO_IN4, OUTPUT);
+
+  pinMode(sensorD, INPUT);
+  pinMode(sensorE, INPUT);
+
+  //inicia o codigo com os motores parados
+  digitalWrite(PINO_IN1, LOW); 
+  digitalWrite(PINO_IN2, LOW);
+  digitalWrite(PINO_IN3, LOW);
+  digitalWrite(PINO_IN4, LOW);
+  digitalWrite(PINO_ENA, LOW);
+  digitalWrite(PINO_ENB, LOW);
+  digitalWrite(standby, HIGH);
+
+ Serial.begin(9600); // Pra ter leitura no motor serial
+// termina a parte de definir os sensores laterais para receber informação
+ pinMode(portaAtivacao, INPUT); // ou output?
+ digitalWrite(portaAtivacao, HIGH); // termina configurações do motor serial
+ for(int i = 0; i<numSensores; i++){
+   pinMode(pinoSensores[i], INPUT); //Usa um for pra fazer o define dos sensores de forma mais compacta
+}
+}
+
+void loop(){
+
+  int i = 90; // pwm
+
+  int sensordValor = analogRead(sensorD);
+  int sensoreValor = analogRead(sensorE);
+
+  if (sensordValor < 900) {
+    if (millis() - tempoAnterior > intervaloLeitura) { // verifica se já passou o intervalo desde a última leitura
+      contadorD++;
+      Serial.println(sensordValor);
+      Serial.println(contadorD);
+      tempoAnterior = millis(); // atualiza o tempo da última leitura
+  if (contadorD >= 88) {
+    if (millis() - tempoAnterior > intervaloLeitura) { // verifica se já passou o intervalo desde a última leitura      
+    i = 0;
+    digitalWrite(PINO_IN1, LOW); 
+    digitalWrite(PINO_IN2, LOW);
+    digitalWrite(PINO_IN3, LOW);
+    digitalWrite(PINO_IN4, LOW);
+    digitalWrite(PINO_ENA, LOW);
+    digitalWrite(PINO_ENB, LOW);
+  }
+  }
+  }
+  }
+  analogWrite(PINO_ENA, i);
+  analogWrite(PINO_ENB, i);
+  
+     int leituraSensores[numSensores];
+ for (int n = 0; n < numSensores; n++){
+   leituraSensores[n] = analogRead(pinoSensores[n]);
+ }
+
+ // Terminou a leitura dos sensores, usar o monitor serial pra ver as respostas??
+ int somaEsquerda = 0;
+ int somaDireita = 0;
+ // Os primeiros quatro sensores vão identificar o lado ESQUERDO
+ for (int i = 0; i < numSensores; i++){ // Começa um for pra percorrer todos os sensores
+   if (i < numSensores / 2){ // Pra conferir se ta pegando informação dos quatro primeiro sensores
+     somaDireita += leituraSensores[i]; // += É de atribuição, tá armazenando as leituras dos 4 primeiro sensores
+   } else {
+     somaEsquerda += leituraSensores[i];
+   }
+ }
+ // Terminou de armazenar as somas!!!!
+ int erro = somaDireita - somaEsquerda; // Calcula o erro, se for maior vai pra direita
+ // ERRO POSITIVO = LADO DIREITO DETECTA MAIS A LINHA, CORRIGIR INDO PRA DIREITA
+ // ERRO NEGATIVO = LADO ESQUERDO DETECTA MAIS A LINHA, CORRIGIR INDO PRA ESQUEDA
+ if (erro > 0){ // Faz curva pra direita desligando o motor esquerdo
+
+  digitalWrite(PINO_IN1, LOW); //MOTOR ESQUERDO
+  digitalWrite(PINO_IN2, LOW);
+  digitalWrite(PINO_IN3, HIGH); // MOTOR DIREITO
+  digitalWrite(PINO_IN4, LOW);
+
+   
+ 
+ } else if ( erro < 0){ // Faz curva pra esquerda desligando o motor direito
+ 
+  digitalWrite(PINO_IN1, HIGH); //MOTOR ESQUERDO
+  digitalWrite(PINO_IN2, LOW);
+  digitalWrite(PINO_IN3, LOW); // MOTOR DIREITO
+  digitalWrite(PINO_IN4, LOW);
+   
+   
+ } else { // Os dois identificam a linha então os dois devem seguir em frente
+
+  digitalWrite(PINO_IN1, HIGH); 
+  digitalWrite(PINO_IN2, LOW);
+  digitalWrite(PINO_IN3, HIGH);
+  digitalWrite(PINO_IN4, LOW);
+ }
+ 
+  }
+
+  void sensorEsquerdo() {
+    int sensoreValor = analogRead(sensorE);
+    if (sensoreValor < 1000) {
+        if (contadorE == 0) {
+            i = 140;
+            contadorE++;
+        }
+        if (contadorE == 8) {
+            i = 140;
+            contadorE++;
+        }
+        if (contadorE == 13) {
+            i = 140;
+            contadorE++;
+        }
+        if (contadorE == 20) {
+            i = 140;
+            contadorE++;
+        }
+        if (contadorE == 83) {
+            i = 140;
+            contadorE++;
+        }
+    }
+  }
