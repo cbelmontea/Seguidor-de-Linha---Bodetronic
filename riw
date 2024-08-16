@@ -12,12 +12,12 @@ const int PINO_IN4 = 10;
 #define standby 8
 
 const int numSensores = 4;
-int pinoSensores[numSensores]={A1,A2,A3,A4};
+int pinoSensores [numSensores]= {A1,A2,A3,A4};
 #define portaAtivacao 13
 int contadorD = 0;
 int contadorE = 0;
 unsigned long tempoAnterior = 0;
-const unsigned long intervaloLeitura = 2500;
+const unsigned long intervaloLeitura = 1000;
 
 void setup() {
   //configuração dos pinos como saida
@@ -50,11 +50,15 @@ void setup() {
 }
 
 void loop(){
-
-  int i = 90; // pwm
-
+  
+  int i = 95; // pwm
+  analogWrite(PINO_ENA, i);
+  analogWrite(PINO_ENB, i);
+  
   int sensordValor = analogRead(sensorD);
   int sensoreValor = analogRead(sensorE);
+
+  //Serial.println(sensordValor);
 
   if (sensordValor < 900) {
     if (millis() - tempoAnterior > intervaloLeitura) { // verifica se já passou o intervalo desde a última leitura
@@ -62,21 +66,21 @@ void loop(){
       Serial.println(sensordValor);
       Serial.println(contadorD);
       tempoAnterior = millis(); // atualiza o tempo da última leitura
-  if (contadorD >= 88) {
-    if (millis() - tempoAnterior > intervaloLeitura) { // verifica se já passou o intervalo desde a última leitura      
-    i = 0;
+   if (contadorD >= 14) {
+    Serial.println("Entrou");
+    i= 0;
     digitalWrite(PINO_IN1, LOW); 
     digitalWrite(PINO_IN2, LOW);
     digitalWrite(PINO_IN3, LOW);
     digitalWrite(PINO_IN4, LOW);
-    digitalWrite(PINO_ENA, LOW);
-    digitalWrite(PINO_ENB, LOW);
+    digitalWrite(standby, LOW);
+    analogWrite(PINO_ENA, i);
+    analogWrite(PINO_ENB, i);
   }
   }
   }
-  }
-  analogWrite(PINO_ENA, i);
-  analogWrite(PINO_ENB, i);
+  
+ 
   
      int leituraSensores[numSensores];
  for (int n = 0; n < numSensores; n++){
@@ -121,32 +125,7 @@ void loop(){
   digitalWrite(PINO_IN2, LOW);
   digitalWrite(PINO_IN3, HIGH);
   digitalWrite(PINO_IN4, LOW);
- }
- 
-  }
+ }}
 
-  void sensorEsquerdo() {
-    int sensoreValor = analogRead(sensorE);
-    if (sensoreValor < 1000) {
-        if (contadorE == 0) {
-            i = 140;
-            contadorE++;
-        }
-        if (contadorE == 8) {
-            i = 140;
-            contadorE++;
-        }
-        if (contadorE == 13) {
-            i = 140;
-            contadorE++;
-        }
-        if (contadorE == 20) {
-            i = 140;
-            contadorE++;
-        }
-        if (contadorE == 83) {
-            i = 140;
-            contadorE++;
-        }
-    }
-  }
+
+ 
